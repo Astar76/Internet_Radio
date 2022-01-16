@@ -1,15 +1,10 @@
-package com.astar.myapplication.data.remote
+package com.astar.myapplication.data.remote.model
 
-import com.astar.myapplication.data.RadioData
 import com.google.gson.annotations.SerializedName
 
 data class Radios(
     @SerializedName("radios") val radioPoints: List<RadioPoint>
-) {
-    fun toRadioData(): List<RadioData> = radioPoints.map {
-        RadioData(name = it.name, stream = it.streamingUrl)
-    }
-}
+)
 
 data class RadioPoint(
     @SerializedName("image_url") val image: String,

@@ -1,10 +1,10 @@
 package com.astar.myapplication.data.remote
 
+import com.astar.myapplication.data.remote.service.RadioServiceApi
 import okhttp3.Interceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.OkHttpClient
-
 
 private const val BASE_URL = "https://radio-world-50-000-radios-stations.p.rapidapi.com/v1/"
 private const val API_KEY = "0f541b4108msh793f3bb9f4cc613p10bb20jsn8d8d5d2626ae"

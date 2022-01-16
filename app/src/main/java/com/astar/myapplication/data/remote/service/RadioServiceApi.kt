@@ -1,5 +1,6 @@
-package com.astar.myapplication.data.remote
+package com.astar.myapplication.data.remote.service
 
+import com.astar.myapplication.data.remote.model.Radios
 import retrofit2.http.GET
 
 interface RadioServiceApi {
