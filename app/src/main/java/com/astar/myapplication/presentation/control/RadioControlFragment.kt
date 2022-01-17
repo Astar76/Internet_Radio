@@ -1,4 +1,4 @@
-package com.astar.myapplication.presentation
+package com.astar.myapplication.presentation.control
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.astar.myapplication.presentation
+package com.astar.myapplication.presentation.radiolist
 
 import android.view.LayoutInflater
 import android.view.View
@@ -34,21 +34,6 @@ class RadioListAdapter(
             override fun areContentsTheSame(oldItem: Radio, newItem: Radio): Boolean {
                 return oldItem == newItem
             }
-        }
-    }
-}
-
-class RadioViewHolder(
-    view: View,
-    private val callback: (radio: Radio) -> Unit
-) : RecyclerView.ViewHolder(view) {
-
-    private val name: TextView = view.findViewById(R.id.name)
-
-    fun bind(radio: Radio) {
-        name.text = radio.name
-        itemView.setOnClickListener {
-            callback.invoke(radio)
         }
     }
 }
