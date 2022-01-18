@@ -1,4 +1,4 @@
-package com.astar.myapplication.presentation.radiolist
+package com.astar.myapplication.presentation.radiolist.adapter
 
 import android.view.View
 import android.widget.TextView

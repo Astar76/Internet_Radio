@@ -5,51 +5,45 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.astar.myapplication.R
 import com.astar.myapplication.databinding.RadioListScreenBinding
 import com.astar.myapplication.domain.model.Radio
-import com.astar.myapplication.presentation.MainActivity
+import com.astar.myapplication.presentation.base.BaseFragment
 import com.astar.myapplication.presentation.control.RadioControlFragment
+import com.astar.myapplication.presentation.radiolist.adapter.RadioListAdapter
 
-class RadioListFragment : Fragment() {
-
-    private var _binding: RadioListScreenBinding? = null
-    private val binding: RadioListScreenBinding get() = _binding!!
-    private lateinit var viewModel: RadioListViewModel
+class RadioListFragment : BaseFragment<RadioListScreenBinding, RadioListViewModel>() {
 
     private val onItemRadioCallback: ((radio: Radio) -> Unit) = {
         parentFragmentManager
             .beginTransaction()
-            .replace(R.id.containerFragment, RadioControlFragment(it.stream))
+            .replace(R.id.containerFragment, RadioControlFragment.newInstance(it.stream))
             .addToBackStack(null)
             .commit()
     }
 
     private val radioListAdapter = RadioListAdapter(onItemRadioCallback)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = (requireActivity() as MainActivity).viewModel(RadioListViewModel::class.java, this)
-    }
+    override fun createBinding(inflater: LayoutInflater, container: ViewGroup?) =
+        RadioListScreenBinding.inflate(layoutInflater, container, false)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = RadioListScreenBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    override fun viewModelClass(): Class<RadioListViewModel> = RadioListViewModel::class.java
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding.recycler) {
+        with(binding.recyclerRadio) {
             layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(createItemDecoration())
             adapter = radioListAdapter
         }
+    }
+
+    private fun createItemDecoration(): RecyclerView.ItemDecoration {
+        return DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
     }
 
     override fun onStart() {
@@ -58,10 +52,20 @@ class RadioListFragment : Fragment() {
     }
 
     private fun handleLoadRadioList(result: RadioResult) {
-        when(result) {
-            is RadioResult.Loading -> Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
-            is RadioResult.Success -> radioListAdapter.submitList(result.data)
-            is RadioResult.Error -> Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+        when (result) {
+            is RadioResult.Loading -> binding.loading.isVisible = true
+            is RadioResult.Success -> showRadioList(result.data)
+            is RadioResult.Error -> showError(result.message)
         }
+    }
+
+    private fun showRadioList(radioList: List<Radio>) {
+        binding.loading.isVisible = false
+        radioListAdapter.submitList(radioList)
+    }
+
+    private fun showError(message: String) {
+        binding.loading.isVisible = false
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }
