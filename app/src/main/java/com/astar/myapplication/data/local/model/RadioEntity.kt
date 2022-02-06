@@ -12,5 +12,7 @@ data class RadioEntity(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "stream")
-    val streamUrl: String
+    val streamUrl: String,
+    @ColumnInfo(name = "image")
+    val imageUrl: String
 )

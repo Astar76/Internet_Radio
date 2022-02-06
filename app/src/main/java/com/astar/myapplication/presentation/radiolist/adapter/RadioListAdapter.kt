@@ -8,7 +8,7 @@ import com.astar.myapplication.R
 import com.astar.myapplication.domain.model.Radio
 
 class RadioListAdapter(
-    private val callback: (radio: Radio) -> Unit
+    private val callback: Callback
 ) : ListAdapter<Radio, RadioViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RadioViewHolder {
@@ -20,6 +20,11 @@ class RadioListAdapter(
 
     override fun onBindViewHolder(holder: RadioViewHolder, position: Int) {
         holder.bind(getItem(position))
+    }
+
+    interface Callback {
+        fun onClickForPlay(radio: Radio)
+        fun onClickForDetails(radio: Radio)
     }
 
     companion object {

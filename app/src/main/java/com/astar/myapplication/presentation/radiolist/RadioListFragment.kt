@@ -16,17 +16,10 @@ import com.astar.myapplication.presentation.base.BaseFragment
 import com.astar.myapplication.presentation.control.RadioControlFragment
 import com.astar.myapplication.presentation.radiolist.adapter.RadioListAdapter
 
-class RadioListFragment : BaseFragment<RadioListScreenBinding, RadioListViewModel>() {
+class RadioListFragment : BaseFragment<RadioListScreenBinding, RadioListViewModel>(),
+    RadioListAdapter.Callback {
 
-    private val onItemRadioCallback: ((radio: Radio) -> Unit) = {
-        parentFragmentManager
-            .beginTransaction()
-            .replace(R.id.containerFragment, RadioControlFragment.newInstance(it.stream))
-            .addToBackStack(null)
-            .commit()
-    }
-
-    private val radioListAdapter = RadioListAdapter(onItemRadioCallback)
+    private val radioListAdapter = RadioListAdapter(this)
 
     override fun createBinding(inflater: LayoutInflater, container: ViewGroup?) =
         RadioListScreenBinding.inflate(layoutInflater, container, false)
@@ -40,15 +33,21 @@ class RadioListFragment : BaseFragment<RadioListScreenBinding, RadioListViewMode
             addItemDecoration(createItemDecoration())
             adapter = radioListAdapter
         }
+
+        binding.playPauseButton.setOnClickListener { viewModel.changePlayingState() }
+        binding.favorite.setOnClickListener { toast("Список избранных радиостанций") }
+        binding.exit.setOnClickListener { requireActivity().finish() }
+
+        viewModel.observeRadioList(viewLifecycleOwner, ::handleLoadRadioList)
+        viewModel.observePlayingState(viewLifecycleOwner, ::updatePlayPauseButton)
+    }
+
+    private fun updatePlayPauseButton(isPlaying: Boolean) {
+        binding.playPauseButton.setImageResource(if (isPlaying) R.drawable.icon_stop else R.drawable.icon_play)
     }
 
     private fun createItemDecoration(): RecyclerView.ItemDecoration {
         return DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.observe(viewLifecycleOwner, ::handleLoadRadioList)
     }
 
     private fun handleLoadRadioList(result: RadioResult) {
@@ -67,5 +66,17 @@ class RadioListFragment : BaseFragment<RadioListScreenBinding, RadioListViewMode
     private fun showError(message: String) {
         binding.loading.isVisible = false
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClickForPlay(radio: Radio) {
+        viewModel.playRadio(radio)
+    }
+
+    override fun onClickForDetails(radio: Radio) {
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.containerFragment, RadioControlFragment.newInstance(radio))
+            .addToBackStack(null)
+            .commit()
     }
 }

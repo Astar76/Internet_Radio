@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.astar.myapplication.data.local.model.RadioEntity
 
 
-@Database(entities = [RadioEntity::class], version = 2, exportSchema = false)
+@Database(entities = [RadioEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun radioDao(): RadioDao
@@ -30,7 +30,9 @@ abstract class AppDatabase : RoomDatabase() {
                 context.applicationContext,
                 AppDatabase::class.java,
                 NAME_DATABASE
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .build()
         }
     }
 }

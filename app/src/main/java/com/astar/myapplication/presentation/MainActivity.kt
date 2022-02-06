@@ -1,11 +1,12 @@
 package com.astar.myapplication.presentation
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.astar.myapplication.R
+import com.astar.myapplication.radioplayer.RadioService
 import com.astar.myapplication.presentation.radiolist.RadioListFragment
 import com.astar.myapplication.servicelocator.RadioApp
 
@@ -24,5 +25,11 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.containerFragment, RadioListFragment())
                 .commit()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        startService(Intent(this, RadioService::class.java))
     }
 }

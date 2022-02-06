@@ -3,5 +3,6 @@ package com.astar.myapplication.domain.model
 data class Radio(
     val id: Int,
     val name: String,
-    val stream: String
+    val stream: String,
+    val image: String
 )

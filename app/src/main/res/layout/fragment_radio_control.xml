@@ -42,11 +42,11 @@
 
     <LinearLayout
         android:id="@+id/controlButtons"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/styled_player"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -54,24 +54,14 @@
             android:id="@+id/play"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_play_24" />
+            android:src="@drawable/icon_play" />
 
         <ImageButton
             android:id="@+id/stop"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_stop_24" />
+            android:src="@drawable/icon_stop" />
 
     </LinearLayout>
-
-    <com.google.android.exoplayer2.ui.StyledPlayerView
-        android:id="@+id/styled_player"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:repeat_toggle_modes="all|one" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

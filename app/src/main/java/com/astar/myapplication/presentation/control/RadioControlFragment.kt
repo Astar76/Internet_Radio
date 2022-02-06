@@ -4,57 +4,44 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import androidx.fragment.app.Fragment
-import com.astar.myapplication.R
-import com.astar.myapplication.player.PlayerControl
-import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.astar.myapplication.databinding.FragmentRadioControlBinding
+import com.astar.myapplication.domain.model.Radio
+import com.astar.myapplication.presentation.base.BaseFragment
 
-class RadioControlFragment() : Fragment() {
+class RadioControlFragment : BaseFragment<FragmentRadioControlBinding, RadioControlViewModel>() {
 
-    private lateinit var playerView : StyledPlayerView
-    private lateinit var play: ImageButton
-    private lateinit var stop: ImageButton
+    override fun createBinding(inflater: LayoutInflater, container: ViewGroup?) =
+        FragmentRadioControlBinding.inflate(inflater, container, false)
 
-    private val playerControl: PlayerControl by lazy { PlayerControl.Base(requireContext()) }
-    private val media: String by lazy { requireArguments().getString(STREAM_URL).orEmpty() } // "https://rock.volna.top/RusRock"
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_radio_control, container, false)
-    }
+    override fun viewModelClass() = RadioControlViewModel::class.java
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playerView = view.findViewById(R.id.styled_player)
-        play = view.findViewById(R.id.play)
-        stop = view.findViewById(R.id.stop)
-        play.setOnClickListener { playerControl.play(media) }
-        stop.setOnClickListener { playerControl.stop() }
+        binding.play.setOnClickListener { playRadio() }
+        binding.stop.setOnClickListener { stopRadio() }
     }
 
-    override fun onStart() {
-        super.onStart()
-        playerControl.attach(playerView)
-        playerControl.play(media)
+    private fun playRadio() {
+        viewModel.changePlayingStatus()
     }
 
-    override fun onStop() {
-        super.onStop()
-        playerControl.detach()
+    private fun stopRadio() {
+        viewModel.changePlayingStatus()
     }
 
     companion object {
 
         private const val STREAM_URL = "stream_url"
+        private const val NAME = "name"
+        private const val IMAGE = "image"
+        private const val GENRE = "genre"
 
         @JvmStatic
-        fun newInstance(streamUrl: String) = RadioControlFragment().apply {
+        fun newInstance(radio: Radio) = RadioControlFragment().apply {
             arguments = Bundle().apply {
-                putString(STREAM_URL, streamUrl)
+                putString(NAME, radio.name)
+                putString(STREAM_URL, radio.stream)
             }
         }
     }
